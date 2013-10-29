@@ -1075,8 +1075,9 @@ static int _handle_session(xmpp_conn_t * const conn,
 
 	conn->authenticated = 1;
 
-	/* call connection handler */
-	conn->conn_handler(conn, XMPP_CONN_CONNECT, 0, NULL, conn->userdata);
+	/* call connection handler, if the user specified one */
+        if (conn->conn_handler)
+          conn->conn_handler(conn, XMPP_CONN_CONNECT, 0, NULL, conn->userdata);
     } else {
 	xmpp_error(conn->ctx, "xmpp", "Server sent malformed session reply.");
 	xmpp_disconnect(conn);
