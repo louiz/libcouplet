@@ -66,6 +66,12 @@ tls_t *tls_new(xmpp_ctx_t *ctx, sock_t sock)
 	tls->ctx = ctx;
 	tls->sock = sock;
 	tls->ssl_ctx = SSL_CTX_new(SSLv23_client_method());
+        if (!tls->ssl_ctx)
+          {
+            xmpp_error(ctx, "TLS", ERR_error_string());
+            tls_free(tls);
+            return NULL;
+          }
 
 	SSL_CTX_set_client_cert_cb(tls->ssl_ctx, NULL);
 	SSL_CTX_set_mode (tls->ssl_ctx, SSL_MODE_ENABLE_PARTIAL_WRITE);

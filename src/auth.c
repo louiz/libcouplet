@@ -573,11 +573,13 @@ static void _auth(xmpp_conn_t * const conn)
     {
 	tls_t *tls = tls_new(conn->ctx, conn->sock);
 
-	/* If we couldn't init tls, it isn't there, so go on */
+	/* If we couldn't init tls, abort everything because we don't want
+           to connect without it */
 	if (!tls)
 	{
 	    conn->tls_support = 0;
-	    _auth(conn);
+	    conn->tls_failed = 1;
+	    xmpp_disconnect(conn);
 	    return;
 	}
 	else
